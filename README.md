@@ -1,50 +1,96 @@
-# Welcome to your Expo app 👋
+# High or Low
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Una aplicación de entrenamiento auditivo musical desarrollada con React Native y Expo.
 
-## Get started
+## Descripción
 
-1. Install dependencies
+High or Low es una aplicación que ayuda a desarrollar el oído musical mediante ejercicios de reconocimiento de intervalos. La aplicación presenta dos notas musicales al usuario y éste debe determinar si la segunda nota es más aguda o más grave que la primera.
 
-   ```bash
-   npm install
-   ```
+## Características
 
-2. Start the app
+- **Sistema de niveles progresivos**: Desde octavas (más fácil) hasta segundas menores (más difícil), más un modo aleatorio
+- **Síntesis de audio en tiempo real**: Utiliza Tone.js para generar notas musicales dinámicamente
+- **Sistema de progreso**: Las puntuaciones se guardan localmente y se desbloquean nuevos niveles al obtener puntuaciones perfectas
+- **Interfaz intuitiva**: Desarrollada con React Native Paper para una experiencia de usuario moderna
 
-   ```bash
-   npx expo start
-   ```
+## Niveles de Dificultad
 
-In the output, you'll find options to open the app in a
+1. **Octavas** (12 semitonos) - Desbloqueado por defecto
+2. **Séptimas Mayores** (11 semitonos)
+3. **Séptimas Menores** (10 semitonos)
+4. **Sextas Mayores** (9 semitonos)
+5. **Sextas Menores** (8 semitonos)
+6. **Quintas Justas** (7 semitonos)
+7. **Cuartas Justas** (5 semitonos)
+8. **Terceras Mayores** (4 semitonos)
+9. **Terceras Menores** (3 semitonos)
+10. **Segundas Mayores** (2 semitonos)
+11. **Segundas Menores** (1 semitono)
+12. **Aleatorio** (cualquier intervalo)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Instalación
 
 ```bash
-npm run reset-project
+# Instalar dependencias
+npm install
+
+# Iniciar la aplicación
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Tecnologías Utilizadas
 
-## Learn more
+- **React Native** - Framework para desarrollo móvil
+- **Expo** - Plataforma de desarrollo
+- **Expo Router** - Navegación basada en archivos
+- **React Native Paper** - Componentes de UI con Material Design
+- **Tone.js** - Síntesis de audio y generación de notas MIDI
+- **AsyncStorage** - Almacenamiento local de progreso
 
-To learn more about developing your project with Expo, look at the following resources:
+## Estructura del Proyecto
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+/app
+  /(tabs)
+    training.tsx    # Pantalla principal de entrenamiento
+    progress.tsx    # Seguimiento de progreso (próximamente)
+    settings.tsx    # Configuración (próximamente)
+  index.tsx         # Pantalla de inicio
+  _layout.tsx       # Layout principal
 
-## Join the community
+/components
+  game-screen.tsx   # Componente del juego
 
-Join our community of developers creating universal apps.
+/constants
+  levels.ts         # Definición de niveles de dificultad
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+/functions
+  audio.ts          # Lógica de síntesis y reproducción de audio
+  storage.ts        # Gestión de progreso con AsyncStorage
+
+/types
+  index.ts          # Definiciones de tipos TypeScript
+```
+
+## Cómo Jugar
+
+1. Abre la aplicación y presiona "Comenzar"
+2. Selecciona un nivel del menú lateral (comienza con "Octavas")
+3. Lee la descripción del intervalo y presiona "Iniciar"
+4. Escucha las dos notas que se reproducen automáticamente
+5. Decide si la segunda nota es más grave o más aguda
+6. Responde 10 preguntas por nivel
+7. Obtén 10/10 para desbloquear el siguiente nivel
+
+## Roadmap
+
+- [ ] Pantalla de progreso con estadísticas detalladas
+- [ ] Configuración de velocidad de reproducción
+- [ ] Modo de práctica libre
+- [ ] Soporte para reproducción ascendente/descendente
+- [ ] Gráficos de progreso histórico
+- [ ] Desafíos diarios
+
+## Licencia
+
+MIT
