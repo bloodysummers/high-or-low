@@ -5,7 +5,7 @@ import { getProgress } from '@/functions/storage';
 import { GameState, IntervalType } from '@/types';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Drawer as DrawerLayout } from 'react-native-drawer-layout';
 import { Appbar, Button, Card, List, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -51,7 +51,15 @@ export default function TrainingScreen() {
     }
   }, [params.selectedLevel]);
 
-  const handleLevelSelect = (levelId: IntervalType) => {
+  const handleLevelSelect = (levelId: IntervalType, isUnlocked: boolean) => {
+    if (!isUnlocked) {
+      Alert.alert(
+        'Nivel Bloqueado',
+        'Debes completar los niveles anteriores con puntuación perfecta (10/10) para desbloquear este nivel.',
+        [{ text: 'Entendido' }]
+      );
+      return;
+    }
     setSelectedLevel(levelId);
     setDrawerOpen(false);
     setGameState(null); // Reset game state when changing levels
@@ -129,15 +137,22 @@ export default function TrainingScreen() {
             <List.Item
               key={level.id}
               title={level.name}
-              left={(props) => (
-                <List.Icon
-                  {...props}
-                  icon={isUnlocked ? 'music-note' : 'lock'}
-                />
+              titleStyle={!isUnlocked ? styles.lockedTitle : undefined}
+              right={(props) => (
+                !isUnlocked ? (
+                  <List.Icon
+                    {...props}
+                    icon="lock"
+                    color="#666"
+                    style={styles.lockIcon}
+                  />
+                ) : null
               )}
-              disabled={!isUnlocked}
-              onPress={() => handleLevelSelect(level.id)}
-              style={selectedLevel === level.id ? styles.selectedLevel : undefined}
+              onPress={() => handleLevelSelect(level.id, isUnlocked)}
+              style={[
+                selectedLevel === level.id && isUnlocked ? styles.selectedLevel : undefined,
+                !isUnlocked ? styles.lockedLevel : undefined,
+              ]}
             />
           );
         })}
@@ -216,6 +231,15 @@ const styles = StyleSheet.create({
   },
   selectedLevel: {
     backgroundColor: 'rgba(103, 80, 164, 0.2)',
+  },
+  lockedLevel: {
+    opacity: 0.5,
+  },
+  lockedTitle: {
+    color: '#666',
+  },
+  lockIcon: {
+    marginRight: 8,
   },
   emptyState: {
     flex: 1,

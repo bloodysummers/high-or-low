@@ -3,7 +3,7 @@ import { updateLevelScore } from '@/functions/storage';
 import { IntervalType } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Drawer as DrawerLayout } from 'react-native-drawer-layout';
 import { Appbar, Button, Card, List, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -68,7 +68,15 @@ export default function ResultsScreen() {
     }
   };
 
-  const handleLevelSelect = (selectedLevelId: IntervalType) => {
+  const handleLevelSelect = (selectedLevelId: IntervalType, isUnlocked: boolean) => {
+    if (!isUnlocked) {
+      Alert.alert(
+        'Nivel Bloqueado',
+        'Debes completar los niveles anteriores con puntuación perfecta (10/10) para desbloquear este nivel.',
+        [{ text: 'Entendido' }]
+      );
+      return;
+    }
     setDrawerOpen(false);
     router.push({
       pathname: '/(tabs)/training',
@@ -92,15 +100,22 @@ export default function ResultsScreen() {
             <List.Item
               key={lvl.id}
               title={lvl.name}
-              left={(props) => (
-                <List.Icon
-                  {...props}
-                  icon={isUnlocked ? 'music-note' : 'lock'}
-                />
+              titleStyle={!isUnlocked ? styles.lockedTitle : undefined}
+              right={(props) => (
+                !isUnlocked ? (
+                  <List.Icon
+                    {...props}
+                    icon="lock"
+                    color="#666"
+                    style={styles.lockIcon}
+                  />
+                ) : null
               )}
-              disabled={!isUnlocked}
-              onPress={() => handleLevelSelect(lvl.id)}
-              style={lvl.id === levelId ? styles.selectedLevel : undefined}
+              onPress={() => handleLevelSelect(lvl.id, isUnlocked)}
+              style={[
+                lvl.id === levelId && isUnlocked ? styles.selectedLevel : undefined,
+                !isUnlocked ? styles.lockedLevel : undefined,
+              ]}
             />
           );
         })}
@@ -204,6 +219,15 @@ const styles = StyleSheet.create({
   },
   selectedLevel: {
     backgroundColor: 'rgba(103, 80, 164, 0.2)',
+  },
+  lockedLevel: {
+    opacity: 0.5,
+  },
+  lockedTitle: {
+    color: '#666',
+  },
+  lockIcon: {
+    marginRight: 8,
   },
   card: {
     backgroundColor: '#1e1e1e',
